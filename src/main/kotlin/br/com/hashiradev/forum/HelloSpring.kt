@@ -10,6 +10,6 @@ class HelloSpring {
 
     @GetMapping
     fun helloSpring(): String {
-        return "Hello Spring! devtools test works!!"
+        return "Hello Spring! devtools test works!"
     }
 }
