@@ -1,7 +1,7 @@
 package br.com.hashiradev.forum.model
 
-data class User(
+data class CourseModel(
     val id: Long? = null,
     val name: String,
-    val email: String,
+    val category: String,
 )
