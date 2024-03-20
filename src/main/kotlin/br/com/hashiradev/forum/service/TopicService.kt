@@ -1,6 +1,7 @@
 package br.com.hashiradev.forum.service
 
 import br.com.hashiradev.forum.DTO.TopicForm
+import br.com.hashiradev.forum.DTO.TopicUpdateForm
 import br.com.hashiradev.forum.DTO.TopicView
 import br.com.hashiradev.forum.mapper.TopicModelMapper
 import br.com.hashiradev.forum.mapper.TopicViewMapper
@@ -22,7 +23,7 @@ class TopicService(
     fun create(topicForm: TopicForm) {
         val topic = topicModelMapper.map(topicForm)
 
-        topic.apply { this.id = (topics.size+1).toLong() }
+        topic.apply { this.id = (topics.size + 1).toLong() }
 
         topics.add(topic)
 
@@ -30,4 +31,17 @@ class TopicService(
 
     fun findModelByID(id: Long) = topics.first { it.id == id }
 
+    fun update(id: Long, topicUpdateForm: TopicUpdateForm) {
+
+        topics.replaceAll {
+             if (it.id == id) {
+                it.apply {
+                    this.title = topicUpdateForm.title
+                    this.message = topicUpdateForm.message
+                }
+            } else {
+                it
+            }
+        }
+    }
 }
