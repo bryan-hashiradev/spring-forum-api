@@ -1,5 +1,6 @@
 package br.com.hashiradev.forum.service
 
+import br.com.hashiradev.forum.DTO.AnswerView
 import br.com.hashiradev.forum.DTO.TopicForm
 import br.com.hashiradev.forum.DTO.TopicUpdateForm
 import br.com.hashiradev.forum.DTO.TopicView
@@ -33,7 +34,7 @@ class TopicService(
     fun update(id: Long, topicUpdateForm: TopicUpdateForm): TopicView {
 
         topics.replaceAll {
-             if (it.id == id) {
+            if (it.id == id) {
                 it.apply {
                     this.title = topicUpdateForm.title
                     this.message = topicUpdateForm.message
@@ -46,5 +47,7 @@ class TopicService(
         return topicViewMapper.map(topics.first { it.id == id })
     }
 
-    fun delete(id: Long) = topics.removeAll { it.id == id }
+    fun delete(id: Long) {
+        topics.removeAll { it.id == id }
+    }
 }
