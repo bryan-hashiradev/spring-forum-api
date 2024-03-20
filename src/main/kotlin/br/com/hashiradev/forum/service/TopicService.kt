@@ -28,4 +28,6 @@ class TopicService(
 
     }
 
+    fun findModelByID(id: Long) = topics.first { it.id == id }
+
 }

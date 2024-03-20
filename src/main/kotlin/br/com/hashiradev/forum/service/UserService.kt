@@ -28,5 +28,5 @@ class UserService(
     }
 
     fun index() = users
-    fun getByID(id: Long): UserModel = users.first { it.id == id }
+    fun findByID(id: Long): UserModel = users.first { it.id == id }
 }

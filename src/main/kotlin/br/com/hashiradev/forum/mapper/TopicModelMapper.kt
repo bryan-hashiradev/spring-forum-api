@@ -15,7 +15,7 @@ class TopicModelMapper(
         null,
         topicForm.title,
         topicForm.message,
-        userService.getByID(topicForm.userID),
+        userService.findByID(topicForm.userID),
         courseService.getByID(topicForm.courseID),
     )
 }
