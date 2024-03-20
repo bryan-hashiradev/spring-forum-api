@@ -20,18 +20,17 @@ class TopicService(
     }
 
     fun findByID(id: Long): TopicView? = topics.find { it.id?.equals(id) ?: false }?.let { topicViewMapper.map(it) }
-    fun create(topicForm: TopicForm) {
+    fun create(topicForm: TopicForm): TopicView {
         val topic = topicModelMapper.map(topicForm)
-
         topic.apply { this.id = (topics.size + 1).toLong() }
-
         topics.add(topic)
 
+        return topicViewMapper.map(topic)
     }
 
     fun findModelByID(id: Long) = topics.first { it.id == id }
 
-    fun update(id: Long, topicUpdateForm: TopicUpdateForm) {
+    fun update(id: Long, topicUpdateForm: TopicUpdateForm): TopicView {
 
         topics.replaceAll {
              if (it.id == id) {
@@ -43,5 +42,9 @@ class TopicService(
                 it
             }
         }
+
+        return topicViewMapper.map(topics.first { it.id == id })
     }
+
+    fun delete(id: Long) = topics.removeAll { it.id == id }
 }
