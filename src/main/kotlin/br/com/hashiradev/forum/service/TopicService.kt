@@ -1,12 +1,13 @@
 package br.com.hashiradev.forum.service
 
-import br.com.hashiradev.forum.DTO.AnswerView
 import br.com.hashiradev.forum.DTO.TopicForm
 import br.com.hashiradev.forum.DTO.TopicUpdateForm
 import br.com.hashiradev.forum.DTO.TopicView
+import br.com.hashiradev.forum.exception.NotFoundException
 import br.com.hashiradev.forum.mapper.TopicModelMapper
 import br.com.hashiradev.forum.mapper.TopicViewMapper
 import br.com.hashiradev.forum.model.TopicModel
+import br.com.hashiradev.forum.utils.TextMessages
 import org.springframework.stereotype.Service
 
 @Service
@@ -20,7 +21,12 @@ class TopicService(
         return topics.map { topicViewMapper.map(it) }
     }
 
-    fun findByID(id: Long): TopicView? = topics.find { it.id?.equals(id) ?: false }?.let { topicViewMapper.map(it) }
+    fun findByID(id: Long): TopicView? {
+        val topicView = topics.find { it.id?.equals(id) ?: false }?.let { topicViewMapper.map(it) }
+        if (topicView == null) throw NotFoundException(TextMessages.TOPIC_NOT_FOUND_ERROR)
+
+        return topicView
+    }
     fun create(topicForm: TopicForm): TopicView {
         val topic = topicModelMapper.map(topicForm)
         topic.apply { this.id = (topics.size + 1).toLong() }

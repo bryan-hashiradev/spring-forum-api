@@ -3,9 +3,11 @@ package br.com.hashiradev.forum.service
 import br.com.hashiradev.forum.DTO.AnswerForm
 import br.com.hashiradev.forum.DTO.AnswerUpdateForm
 import br.com.hashiradev.forum.DTO.AnswerView
+import br.com.hashiradev.forum.exception.NotFoundException
 import br.com.hashiradev.forum.mapper.AnswerModelMapper
 import br.com.hashiradev.forum.mapper.AnswerViewMapper
 import br.com.hashiradev.forum.model.AnswerModel
+import br.com.hashiradev.forum.utils.TextMessages
 import org.springframework.stereotype.Service
 
 @Service
@@ -22,7 +24,9 @@ class AnswerService(
     }
 
     fun update(id: Long, answerUpdateForm: AnswerUpdateForm) {
-        val answer = answers.first { it.id == id }
+        val answer = answers.find { it.id == id }
+        if (answer == null ) throw NotFoundException(TextMessages.ANSWER_NOT_FOUND_ERROR)
+
         answer.topic.answers.remove(answer)
         answers.remove(answer)
 
@@ -30,11 +34,13 @@ class AnswerService(
 
         answer.topic.answers.add(answer)
         answers.add(answer)
-
     }
 
     fun delete(id: Long) {
-        val answer = answers.first { it.id == id }
+        val answer = answers.find { it.id == id }
+
+        if (answer == null ) throw NotFoundException(TextMessages.ANSWER_NOT_FOUND_ERROR)
+
         answer.topic.answers.remove(answer)
         answers.remove(answer)
     }
