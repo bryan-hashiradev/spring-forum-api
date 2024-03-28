@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.util.UriComponentsBuilder
@@ -23,7 +24,7 @@ import org.springframework.web.util.UriComponentsBuilder
 @RequestMapping("/topic")
 class TopicController(private val topicService: TopicService) {
     @GetMapping
-    fun index() = topicService.index()
+    fun index(@RequestParam(required = false) courseName: String?) = topicService.index(courseName)
     @GetMapping("/{id}")
     fun findByID(@PathVariable id: Long) = topicService.findByID(id)
 

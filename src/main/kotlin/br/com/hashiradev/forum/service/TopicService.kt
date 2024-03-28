@@ -20,8 +20,11 @@ class TopicService(
 
     fun findModelByID(id: Long): TopicModel = repository.findById(id)
             .orElseThrow { NotFoundException(TextMessages.TOPIC_NOT_FOUND_ERROR) }
-    fun index(): List<TopicView> {
-        return repository.findAll().map { topicViewMapper.map(it) }
+    fun index(courseName: String?): List<TopicView> {
+        return when(courseName) {
+            null -> repository.findAll()
+            else -> repository.findByCourseName(courseName)
+        }.let { it.map { topicViewMapper.map(it) } }
     }
 
     fun findByID(id: Long): TopicView = findModelByID(id)
