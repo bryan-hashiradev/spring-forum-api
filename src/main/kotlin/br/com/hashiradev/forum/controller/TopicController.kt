@@ -7,6 +7,7 @@ import br.com.hashiradev.forum.service.TopicService
 import jakarta.transaction.Transactional
 import jakarta.validation.Valid
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -28,7 +29,7 @@ class TopicController(private val topicService: TopicService) {
     @GetMapping
     fun index(
         @RequestParam(required = false) courseName: String?,
-        @PageableDefault(size = 5) pagination: Pageable,
+        @PageableDefault(size = 5, sort = ["createdAt"], direction = Sort.Direction.DESC) pagination: Pageable,
     ) = topicService.index(courseName, pagination)
 
     @GetMapping("/{id}")
