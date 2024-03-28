@@ -9,6 +9,8 @@ import br.com.hashiradev.forum.mapper.TopicViewMapper
 import br.com.hashiradev.forum.model.TopicModel
 import br.com.hashiradev.forum.repository.TopicRepository
 import br.com.hashiradev.forum.utils.TextMessages
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
@@ -20,10 +22,10 @@ class TopicService(
 
     fun findModelByID(id: Long): TopicModel = repository.findById(id)
             .orElseThrow { NotFoundException(TextMessages.TOPIC_NOT_FOUND_ERROR) }
-    fun index(courseName: String?): List<TopicView> {
+    fun index(courseName: String?, pagination: Pageable): Page<TopicView> {
         return when(courseName) {
-            null -> repository.findAll()
-            else -> repository.findByCourseName(courseName)
+            null -> repository.findAll(pagination)
+            else -> repository.findByCourseName(courseName, pagination)
         }.let { it.map { topicViewMapper.map(it) } }
     }
 
