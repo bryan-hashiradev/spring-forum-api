@@ -36,8 +36,6 @@ class AnswerService(
     }
 
     fun findAnswersByTopicID(id: Long): List<AnswerView> {
-        return repository.findAll().filter {
-            it.topic.id == id
-        }.map { answerViewMapper.map(it) }
+        return repository.findByTopicId(id).map { answerViewMapper.map(it) }
     }
 }
