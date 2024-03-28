@@ -3,6 +3,7 @@ package br.com.hashiradev.forum.controller
 import br.com.hashiradev.forum.DTO.AnswerForm
 import br.com.hashiradev.forum.DTO.AnswerUpdateForm
 import br.com.hashiradev.forum.service.AnswerService
+import jakarta.transaction.Transactional
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
@@ -14,15 +15,18 @@ class AnswerController(
 ) {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @Transactional
     fun create(@RequestBody @Valid answerForm: AnswerForm) = answerService.create(answerForm)
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     fun update(@PathVariable id: Long, @RequestBody @Valid answerUpdateForm: AnswerUpdateForm) =
         answerService.update(id, answerUpdateForm)
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     fun delete(@PathVariable id: Long) = answerService.delete(id)
 
 

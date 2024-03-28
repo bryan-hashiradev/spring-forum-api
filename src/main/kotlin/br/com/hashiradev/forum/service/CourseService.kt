@@ -1,32 +1,15 @@
 package br.com.hashiradev.forum.service
 
+import br.com.hashiradev.forum.exception.NotFoundException
 import br.com.hashiradev.forum.model.CourseModel
+import br.com.hashiradev.forum.repository.CourseRepository
+import br.com.hashiradev.forum.utils.TextMessages
 import org.springframework.stereotype.Service
 
 @Service
 class CourseService(
-    private var courses: List<CourseModel>
+    private val repository: CourseRepository
 ) {
-    init {
-        courses = listOf(
-            CourseModel(
-                1,
-                "kotlin",
-                "programação"
-            ),
-            CourseModel(
-                2,
-                "Java",
-                "programação"
-            ),
-            CourseModel(
-                3,
-                "JPA com Hibernate",
-                "programação"
-            )
-        )
-    }
-
-    fun index() = courses
-    fun getByID(id: Long): CourseModel = courses.first { it.id == id }
+    fun index() = repository.findAll()
+    fun getByID(id: Long): CourseModel = repository.findById(id).orElseThrow { NotFoundException(TextMessages.COURSE_NOT_FOUND_ERROR) }
 }

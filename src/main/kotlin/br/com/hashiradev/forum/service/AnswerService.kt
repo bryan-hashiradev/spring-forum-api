@@ -7,46 +7,37 @@ import br.com.hashiradev.forum.exception.NotFoundException
 import br.com.hashiradev.forum.mapper.AnswerModelMapper
 import br.com.hashiradev.forum.mapper.AnswerViewMapper
 import br.com.hashiradev.forum.model.AnswerModel
+import br.com.hashiradev.forum.repository.AnswerRepository
 import br.com.hashiradev.forum.utils.TextMessages
 import org.springframework.stereotype.Service
 
 @Service
 class AnswerService(
-    private var answers: MutableList<AnswerModel> = mutableListOf<AnswerModel>(),
+    private val repository: AnswerRepository,
     private val answerModelMapper: AnswerModelMapper,
     private val answerViewMapper: AnswerViewMapper,
 ) {
     fun create(answer: AnswerForm) {
         val answerModel = answerModelMapper.map(answer)
-        answerModel.id = (answers.size + 1).toLong()
-        answerModel.topic.answers.add(answerModel)
-        answers.add(answerModel)
+        repository.save(answerModel)
     }
 
     fun update(id: Long, answerUpdateForm: AnswerUpdateForm) {
-        val answer = answers.find { it.id == id }
-        if (answer == null ) throw NotFoundException(TextMessages.ANSWER_NOT_FOUND_ERROR)
-
-        answer.topic.answers.remove(answer)
-        answers.remove(answer)
-
-        answer.message = answerUpdateForm.message
-
-        answer.topic.answers.add(answer)
-        answers.add(answer)
+        val answer = repository.findById(id)
+            .orElseThrow { throw NotFoundException(TextMessages.ANSWER_NOT_FOUND_ERROR) }
+            .apply {
+                this.message = answerUpdateForm.message
+            }
+        repository.save(answer)
     }
 
     fun delete(id: Long) {
-        val answer = answers.find { it.id == id }
-
-        if (answer == null ) throw NotFoundException(TextMessages.ANSWER_NOT_FOUND_ERROR)
-
-        answer.topic.answers.remove(answer)
-        answers.remove(answer)
+        repository.deleteById(id)
     }
 
     fun findAnswersByTopicID(id: Long): List<AnswerView> {
-        return answers.filter { it.topic.id == id }
-            .map { answerViewMapper.map(it) }
+        return repository.findAll().filter {
+            it.topic.id == id
+        }.map { answerViewMapper.map(it) }
     }
 }
