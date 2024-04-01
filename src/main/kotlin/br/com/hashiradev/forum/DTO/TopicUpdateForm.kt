@@ -6,6 +6,6 @@ import jakarta.validation.constraints.Size
 data class TopicUpdateForm(
     @field:NotEmpty
     val title: String,
-    @field:NotEmpty @field:Size(min = 5, max = 5, message = "message size error!")
+    @field:NotEmpty @field:Size(min = 5, message = "message size error!")
     val message: String
 )
