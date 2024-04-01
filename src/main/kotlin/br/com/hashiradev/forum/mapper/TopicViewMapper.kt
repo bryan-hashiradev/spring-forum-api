@@ -12,7 +12,7 @@ class TopicViewMapper: Mapper<TopicModel, TopicView> {
             topic.title,
             topic.message,
             topic.status,
-            topic.createAt
+            topic.createdAt
         )
     }
 }

@@ -1,32 +1,16 @@
 package br.com.hashiradev.forum.service
 
+import br.com.hashiradev.forum.exception.NotFoundException
 import br.com.hashiradev.forum.model.UserModel
+import br.com.hashiradev.forum.repository.UserRepository
+import br.com.hashiradev.forum.utils.TextMessages
 import org.springframework.stereotype.Service
 
 @Service
 class UserService(
-    private var users: List<UserModel>
+    private val repository: UserRepository
 ) {
-    init {
-        users = listOf(
-            UserModel(
-                1,
-                "Bryan G",
-                "mail.bryan@email.com"
-            ),
-            UserModel(
-                2,
-                "Renan G",
-                "mail.raposas@email.com"
-            ),
-            UserModel(
-                3,
-                "Debora C",
-                "mail.denna@email.com"
-            ),
-        )
-    }
 
-    fun index() = users
-    fun findByID(id: Long): UserModel = users.first { it.id == id }
+    fun index() = repository.findAll()
+    fun findByID(id: Long): UserModel = repository.findById(id).orElseThrow { NotFoundException(TextMessages.USER_NOT_FOUND_ERROR) }
 }
