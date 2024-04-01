@@ -6,6 +6,8 @@ import br.com.hashiradev.forum.DTO.TopicView
 import br.com.hashiradev.forum.service.TopicService
 import jakarta.transaction.Transactional
 import jakarta.validation.Valid
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.data.web.PageableDefault
@@ -27,6 +29,7 @@ import org.springframework.web.util.UriComponentsBuilder
 @RequestMapping("/topic")
 class TopicController(private val topicService: TopicService) {
     @GetMapping
+    @Cacheable("topics-cache")
     fun index(
         @RequestParam(required = false) courseName: String?,
         @PageableDefault(size = 5, sort = ["createdAt"], direction = Sort.Direction.DESC) pagination: Pageable,
@@ -37,6 +40,7 @@ class TopicController(private val topicService: TopicService) {
 
     @PostMapping
     @Transactional
+    @CacheEvict(*["topics-cache"], allEntries = true)
     fun create(
         @RequestBody @Valid form: TopicForm,
         uriBuilder: UriComponentsBuilder,
@@ -48,6 +52,7 @@ class TopicController(private val topicService: TopicService) {
 
     @PutMapping("/{id}")
     @Transactional
+    @CacheEvict(value = ["topics-cache"], allEntries = true)
     fun update(
         @PathVariable id: Long,
         @RequestBody @Valid form: TopicUpdateForm,
@@ -56,5 +61,6 @@ class TopicController(private val topicService: TopicService) {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
+    @CacheEvict(value = ["topics-cache"], allEntries = true)
     fun delete(@PathVariable id: Long) = topicService.delete(id)
 }
