@@ -1,5 +1,6 @@
 package br.com.hashiradev.forum.service
 
+import br.com.hashiradev.forum.adapter.UserDetailsImplAdapter
 import br.com.hashiradev.forum.exception.NotFoundException
 import br.com.hashiradev.forum.model.UserModel
 import br.com.hashiradev.forum.repository.UserRepository
@@ -17,6 +18,6 @@ class UserService(
     fun findByID(id: Long): UserModel = repository.findById(id).orElseThrow { NotFoundException(TextMessages.USER_NOT_FOUND_ERROR) }
     override fun loadUserByUsername(username: String?): UserDetails? {
         val user = repository.findByEmail(username) ?: throw RuntimeException()
-        return UserDetailsImpl(user)
+        return UserDetailsImplAdapter(user)
     }
 }

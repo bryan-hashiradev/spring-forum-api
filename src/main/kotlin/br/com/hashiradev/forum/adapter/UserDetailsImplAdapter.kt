@@ -1,10 +1,10 @@
-package br.com.hashiradev.forum.service
+package br.com.hashiradev.forum.adapter
 
 import br.com.hashiradev.forum.model.UserModel
 import org.springframework.security.core.userdetails.UserDetails
 
-class UserDetailsImpl(private val userModel: UserModel): UserDetails {
-    override fun getAuthorities() = null
+class UserDetailsImplAdapter(private val userModel: UserModel): UserDetails {
+    override fun getAuthorities() = userModel.roles
 
     override fun getPassword() = userModel.password
 
