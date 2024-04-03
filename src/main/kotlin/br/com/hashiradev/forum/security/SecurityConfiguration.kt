@@ -18,6 +18,8 @@ class SecurityConfiguration {
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http {
             authorizeHttpRequests {
+                authorize("/topic", hasAnyAuthority("READ_WRITE"))
+                authorize("/topic/not-answered", hasAnyAuthority("READ_WRITE"))
                 authorize(anyRequest, authenticated)
             }
             httpBasic {}
