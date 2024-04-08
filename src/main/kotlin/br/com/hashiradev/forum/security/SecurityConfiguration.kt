@@ -33,7 +33,7 @@ class SecurityConfiguration(
         }
         return http
             .addFilterBefore(JWTValidateFilter(jwtUtils, authenticationConfiguration.authenticationManager), UsernamePasswordAuthenticationFilter::class.java)
-            .addFilterBefore(JWTAuthenticationFilter(jwtUtils, authenticationConfiguration.authenticationManager), UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(JWTAuthenticationFilter(jwtUtils), UsernamePasswordAuthenticationFilter::class.java)
             .build()
     }
     @Bean
