@@ -33,9 +33,9 @@ class JWTValidateFilter(
         chain: FilterChain?,
         authResult: Authentication?
     ) {
-        val username = (authResult?.principal as UserDetailsImplAdapter).username
+        val userDetails = (authResult?.principal as UserDetailsImplAdapter)
 
-        val token = jwtUtils.generateJWT(username)
+        val token = jwtUtils.generateJWT(userDetails)
         response?.addHeader("Authorization", "Bearer ${token}")
     }
 }

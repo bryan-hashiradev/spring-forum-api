@@ -1,30 +1,33 @@
 package br.com.hashiradev.forum.security
 
+import br.com.hashiradev.forum.service.UserService
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jws
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
-import io.jsonwebtoken.security.Password
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.authentication.jaas.AuthorityGranter
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Component
 import java.util.*
 import javax.crypto.SecretKey
 
 
 @Component
-class JWTUtils {
+class JWTUtils (private val userService: UserService) {
 
-    private val expirationTime =  (1000 * 60).toLong()
+    private val expirationTime =  (1000 * 60 * 5).toLong() //miliseconds 1s * to n seconds * to n minutes
 
     @Value("\${jwt.secret}")
     lateinit var secretString: String
-    fun generateJWT(userName: String): String {
+    fun generateJWT(userDetails: UserDetails): String {
         val key = getKey()
         return Jwts.builder()
-            .subject(userName)
+            .subject(userDetails.username)
+            .claim("roles", userDetails.authorities)
             .expiration(Date(System.currentTimeMillis() + expirationTime))
             .signWith(key)
             .compact()
@@ -32,7 +35,7 @@ class JWTUtils {
 
     fun isValid(jwtString: String): Boolean {
         return try {
-            getparsedJwt(jwtString, getKey())
+            getParsedJwt(jwtString, getKey())
             true
         } catch (ex: IllegalArgumentException) {
             false
@@ -40,13 +43,14 @@ class JWTUtils {
     }
 
     fun getAuthenticationDetails(jwtString: String): Authentication {
-        val jwt = getparsedJwt(jwtString, getKey())
+        val jwt = getParsedJwt(jwtString, getKey())
         val username = jwt?.payload?.subject
+        val userDetails = userService.loadUserByUsername(username)
 
-        return UsernamePasswordAuthenticationToken(username, null, null)
+        return UsernamePasswordAuthenticationToken(username, null, userDetails?.authorities)
     }
 
-    private fun getparsedJwt(jwtString: String, key: SecretKey): Jws<Claims>? {
+    private fun getParsedJwt(jwtString: String, key: SecretKey): Jws<Claims>? {
         return Jwts
             .parser()
             .verifyWith(key)

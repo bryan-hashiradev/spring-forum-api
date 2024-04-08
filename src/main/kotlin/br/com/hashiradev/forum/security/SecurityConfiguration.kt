@@ -24,6 +24,7 @@ class SecurityConfiguration(
             csrf { disable() }
             authorizeHttpRequests {
                 authorize(HttpMethod.POST,"/login", permitAll)
+                authorize(HttpMethod.PUT, "/**", hasAnyAuthority("WRITE"))
                 authorize(anyRequest, authenticated)
             }
             sessionManagement {
