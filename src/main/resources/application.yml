@@ -14,3 +14,5 @@ spring:
     hibernate:
       ddl-auto: none
 #    database-platform: org.hibernate.dialect.H2Dialect
+jwt:
+  secret: uEAhVLWKWpXCd/8S7VcsHfyYpZmoaLFcrvTzzBSB555GMSyJuMS5h5dWu4y/CtYxjhGll5czQfNy1Gp1g23VQA==
