@@ -1,16 +1,4 @@
 spring:
-  application:
-    name: forum
-  datasource:
-    driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/forum
-    username: springuser
-    password: Spring@123
-  jpa:
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
-    hibernate:
-      ddl-auto: none
-#    database-platform: org.hibernate.dialect.H2Dialect
+  profiles:
+    active: @activatedProperties@
+

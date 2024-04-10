@@ -1,9 +1,7 @@
 package br.com.hashiradev.forum.model
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import com.fasterxml.jackson.annotation.JsonIgnore
+import jakarta.persistence.*
 
 @Entity(name = "users")
 data class UserModel(
@@ -11,4 +9,9 @@ data class UserModel(
     val id: Long? = null,
     val name: String,
     val email: String,
+    val password: String,
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "users_roles")
+    @JsonIgnore
+    val roles: List<RoleModel> = mutableListOf(),
 )
