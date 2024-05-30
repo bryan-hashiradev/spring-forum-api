@@ -3,9 +3,9 @@ spring:
     name: forum
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/forum
-    username: springuser
-    password: Spring@123
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3336/forum
+    username: root
+    password: 123
   jpa:
     properties:
       hibernate:
